@@ -24,7 +24,7 @@ function gitAlias() {
 function bashrcConfig() {
   echo -e "\033[0;36mConfigurando Bashrc ... \033[0m"
 
-  echo "export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;36m\]\w \[\e[0;34m\]`git branch 2> /dev/null | grep -e ^* | sed -E s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`\n\[\033[37m\]$\[\033[00m\] '">>~/.bashrc
+  echo "export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;33m\]\w \[\e[0;36m\]`git rev-parse --abbrev-ref HEAD 2> /dev/null | sed \"s/.*/\(&\) /\"`\n\[\033[37m\]$\[\033[00m\] '">>~/.bashrc
 
   source ~/.bashrc
 }
