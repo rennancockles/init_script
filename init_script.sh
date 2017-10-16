@@ -21,6 +21,16 @@ function gitAlias() {
   git config --global alias.lg 'log --graph --oneline --decorate --all'
 }
 
+function homeBin() {
+  [[ -d $HOME/bin ]] || mkdir $HOME/bin
+
+  HOME_ESCAPE=$(echo $HOME | sed 's,/,\\/,g');
+  LN=$(sed -n '/secure_path/=' /etc/sudoers)
+
+  # Add to sudo PATH
+  sed -ri "${LN}s/(.*)\"/\1:$HOME_ESCAPE\/bin\"/" /etc/sudoers
+}
+
 function bashrcConfig() {
   echo -e "\033[0;36mConfigurando Bashrc ... \033[0m"
 
@@ -323,6 +333,7 @@ for i in ${arr[*]}; do
   [[ $REPLY =~ [sSyY\ ] ]] || [[ $REPLY == '' ]] && aptInstall $i;
 done
 
+homeBin
 bashrcConfig
 keybindingsConfig
 behaviorConfig
