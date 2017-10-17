@@ -58,6 +58,7 @@ function behaviorConfig() {
   # Workspaces
   gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ hsize 2
   gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ vsize 2
+  gsettings set org.compiz.unityshell:/org/compiz/profiles/${profile}/plugins/unityshell/ icon-size 34
 
   # Always show menus
   gsettings set com.canonical.Unity always-show-menus true
