@@ -1,25 +1,8 @@
 #! /bin/bash
 
-function nemoDefault() {
-  echo -e "\033[0;36mConfigurando Nemo ... \033[0m"
-  # Set Nemo default file manager
-  xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
-
-  # Set Nemo default desktop handler
-  gsettings set org.gnome.desktop.background show-desktop-icons false
-  gsettings set org.nemo.desktop show-desktop-icons true
-}
-
-function gitAlias() {
-  echo -e "\033[0;36mConfigurando Git ... \033[0m"
-
-  git config --global alias.s 'status -s'
-  git config --global alias.co 'checkout'
-  git config --global alias.ld 'log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
-  git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
-  git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate'
-  git config --global alias.lg 'log --graph --oneline --decorate --all'
-}
+##############################
+#           CONFIG           #
+##############################
 
 function homeBin() {
   [[ -d $HOME/bin ]] || mkdir $HOME/bin
@@ -29,6 +12,18 @@ function homeBin() {
 
   # Add to sudo PATH
   sed -ri "${LN}s/(.*)\"/\1:$HOME_ESCAPE\/bin\"/" /etc/sudoers
+
+  git clone -q https://github.com/rennancockles/bin_files.git $HOME/bin
+}
+
+function backgrounds() {
+  wget -q http://wallpaperswide.com/download/homer_loves_donuts-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Hommer.jpg
+  wget -q http://wallpaperswide.com/download/galactic_dinner-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Dinner.jpg
+  wget -q http://wallpaperswide.com/download/blame_the_bunny-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Bunny.jpg
+  wget -q http://wallpaperswide.com/download/bike_chase-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Chase.jpg
+
+  gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/Dinner.jpg'
+  gsettings set org.gnome.desktop.background picture-options 'scaled'
 }
 
 function bashrcConfig() {
@@ -67,15 +62,24 @@ function behaviorConfig() {
   gsettings set com.canonical.Unity integrated-menus true
 }
 
-function launcherConfig() {
-  echo -e "\033[0;36mConfigurando Launcher ... \033[0m"
+function gitConfig() {
+  echo -e "\033[0;36mConfigurando Git ... \033[0m"
 
-  # Launcher position
-  # gsettings set com.canonical.Unity.Launcher launcher-position 'Top'
+  echo -e "\033[1;33mDigite um nome para a config user.name \033[0m";
+  read -r NAME
 
-  # Launcher intems
-  laucherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
-  gsettings set com.canonical.Unity.Launcher favorites $laucherItems
+  echo -e "\033[1;33mDigite um email para a config user.email \033[0m";
+  read -r MAIL
+
+  git config --global user.name $NAME
+  git config --global user.email $MAIL
+
+  git config --global alias.s 'status -s'
+  git config --global alias.co 'checkout'
+  git config --global alias.ld 'log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
+  git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
+  git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate'
+  git config --global alias.lg 'log --graph --oneline --decorate --all'
 }
 
 function terminatorConfig() {
@@ -110,54 +114,50 @@ function terminatorConfig() {
 ' > ~/.config/terminator/config
 }
 
-function getWps() {
-  echo -e "\033[0;36mObtendo Wps ... \033[0m";
+function nemoDefault() {
+  echo -e "\033[0;36mConfigurando Nemo ... \033[0m"
+  # Set Nemo default file manager
+  xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 
-  linuxVersion="$([[ `uname -p` == x86_64 ]] && echo amd64 || echo i386)"
-  link="$(curl -s http://wps-community.org/downloads | grep -oE "http:\/\/kdl1[^\"\ ]*?${linuxVersion}\.deb")"
-  fileName="wps-office.deb"
+  # Set Nemo default desktop handler
+  gsettings set org.gnome.desktop.background show-desktop-icons false
+  gsettings set org.nemo.desktop show-desktop-icons true
+}
+
+function launcherConfig() {
+  echo -e "\033[0;36mConfigurando Launcher ... \033[0m"
+
+  # Launcher position
+  # gsettings set com.canonical.Unity.Launcher launcher-position 'Top'
+
+  # Launcher intems
+  laucherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
+  gsettings set com.canonical.Unity.Launcher favorites $laucherItems
+}
+
+
+##############################
+#         SOFTWARES          #
+##############################
+
+function getDbeaver() {
+  echo -e "\033[0;36mObtendo DBeaver ... \033[0m";
+
+  link="https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb"
+  fileName="dbeaver.deb"
+
+  wget https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb -O $fileName
+  dpkgInstall $fileName
+}
+
+function getSlack() {
+  echo -e "\033[0;36mObtendo Slack ... \033[0m";
+
+  lastVersion="$(curl -s https://slack.com/downloads/linux | grep Version | grep -oe [0-9.]*)"
+  link="https://downloads.slack-edge.com/linux_releases/slack-desktop-${lastVersion}-amd64.deb"
+  fileName="slack.deb"
 
   wget $link -O $fileName
-  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O web-office-fonts.deb
-  dpkgInstall $fileName
-}
-
-function getWpsFonts() {
-  echo -e "\033[0;36mObtendo Wps Fonts ... \033[0m";
-
-  fileName="wps-office-fonts.deb"
-
-  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O $fileName
-  dpkgInstall $fileName
-}
-
-function getVirtualBox() {
-  echo -e "\033[0;36mObtendo Virtual Box ... \033[0m";
-
-  linuxVersion="$([[ `uname -p` == x86_64 ]] && echo amd64 || echo i386)"
-  linuxName="$(lsb_release -sc)"
-  link="$(curl -s https://www.virtualbox.org/wiki/Linux_Downloads | grep -oE "http:\/\/[^\"\ ]*?${linuxName}_${linuxVersion}\.deb")"
-  fileName="vbox.deb"
-
-  wget $link -O $fileName
-  dpkgInstall $fileName
-}
-
-function getTeamviewer() {
-  echo -e "\033[0;36mObtendo Team Viewer ... \033[0m";
-
-  fileName="teamviewer.deb"
-
-  wget https://download.teamviewer.com/download/teamviewer_i386.deb -O $fileName
-  dpkgInstall $fileName
-}
-
-function getChrome() {
-  echo -e "\033[0;36mObtendo Chrome ... \033[0m";
-
-  fileName="chrome.deb"
-
-  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $fileName
   dpkgInstall $fileName
 }
 
@@ -183,26 +183,62 @@ Categories=Development;
 EOL
 }
 
-function getSlack() {
-  echo -e "\033[0;36mObtendo Slack ... \033[0m";
+function getChrome() {
+  echo -e "\033[0;36mObtendo Chrome ... \033[0m";
 
-  lastVersion="$(curl -s https://slack.com/downloads/linux | grep Version | grep -oe [0-9.]*)"
-  link="https://downloads.slack-edge.com/linux_releases/slack-desktop-${lastVersion}-amd64.deb"
-  fileName="slack.deb"
+  fileName="chrome.deb"
+
+  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $fileName
+  dpkgInstall $fileName
+}
+
+function getVirtualBox() {
+  echo -e "\033[0;36mObtendo Virtual Box ... \033[0m";
+
+  linuxVersion="$([[ `uname -p` == x86_64 ]] && echo amd64 || echo i386)"
+  linuxName="$(lsb_release -sc)"
+  link="$(curl -s https://www.virtualbox.org/wiki/Linux_Downloads | grep -oE "http:\/\/[^\"\ ]*?${linuxName}_${linuxVersion}\.deb")"
+  fileName="vbox.deb"
 
   wget $link -O $fileName
   dpkgInstall $fileName
 }
 
-function getDbeaver() {
-  echo -e "\033[0;36mObtendo DBeaver ... \033[0m";
+function getTeamviewer() {
+  echo -e "\033[0;36mObtendo Team Viewer ... \033[0m";
 
-  link="https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb"
-  fileName="dbeaver.deb"
+  fileName="teamviewer.deb"
 
-  wget https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb -O $fileName
+  wget https://download.teamviewer.com/download/teamviewer_i386.deb -O $fileName
   dpkgInstall $fileName
 }
+
+function getWps() {
+  echo -e "\033[0;36mObtendo Wps ... \033[0m";
+
+  linuxVersion="$([[ `uname -p` == x86_64 ]] && echo amd64 || echo i386)"
+  link="$(curl -s http://wps-community.org/downloads | grep -oE "http:\/\/kdl1[^\"\ ]*?${linuxVersion}\.deb")"
+  fileName="wps-office.deb"
+
+  wget $link -O $fileName
+  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O web-office-fonts.deb
+  dpkgInstall $fileName
+}
+
+function getWpsFonts() {
+  echo -e "\033[0;36mObtendo Wps Fonts ... \033[0m";
+
+  fileName="wps-office-fonts.deb"
+
+  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O $fileName
+  dpkgInstall $fileName
+}
+
+
+
+##############################
+#          HELPERS           #
+##############################
 
 function dpkgInstall() {
     dpkg -i $1
@@ -272,7 +308,6 @@ function afterScript() {
 
 
 
-
 ##############################
 #            MAIN            #
 ##############################
@@ -312,8 +347,8 @@ arrCalls=(
   'getSlack'
   'getPostman'
   'getChrome'
-  'getTeamviewer'
   'getVirtualBox'
+  'getTeamviewer'
   'getWps'
   'getWpsFonts'
 )
@@ -335,11 +370,12 @@ for i in ${arr[*]}; do
 done
 
 homeBin
+backgrounds
 bashrcConfig
 keybindingsConfig
 behaviorConfig
 
-gitAlias
+gitConfig
 terminatorConfig
 nemoDefault
 
