@@ -7,6 +7,9 @@
 function homeBin() {
   [[ -d $HOME/bin ]] || mkdir $HOME/bin
 
+  chown $(users) $HOME/bin
+  chgrp $(users) $HOME/bin
+
   HOME_ESCAPE=$(echo $HOME | sed 's,/,\\/,g');
   LN=$(sed -n '/secure_path/=' /etc/sudoers)
 
@@ -21,9 +24,6 @@ function backgrounds() {
   wget -q http://wallpaperswide.com/download/galactic_dinner-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Dinner.jpg
   wget -q http://wallpaperswide.com/download/blame_the_bunny-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Bunny.jpg
   wget -q http://wallpaperswide.com/download/bike_chase-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Chase.jpg
-
-  gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/Dinner.jpg'
-  gsettings set org.gnome.desktop.background picture-options 'scaled'
 }
 
 function bashrcConfig() {
@@ -32,34 +32,6 @@ function bashrcConfig() {
   echo "export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;33m\]\w \[\e[0;36m\]`git rev-parse --abbrev-ref HEAD 2> /dev/null | sed \"s/.*/\(&\) /\"`\n\[\033[37m\]$\[\033[00m\] '">>~/.bashrc
 
   source ~/.bashrc
-}
-
-function keybindingsConfig() {
-  echo -e "\033[0;36mConfigurando Keybindings ... \033[0m"
-
-  keybindings="['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
-  gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings $keybindings
-
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'nemo'
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'nemo'
-  gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '<Super>e'
-}
-
-function behaviorConfig() {
-  echo -e "\033[0;36mConfigurando Workspaces ... \033[0m"
-
-  profile=$(gsettings get org.compiz current-profile | tr -d "'")
-
-  # Workspaces
-  gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ hsize 2
-  gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ vsize 2
-  gsettings set org.compiz.unityshell:/org/compiz/profiles/${profile}/plugins/unityshell/ icon-size 34
-
-  # Always show menus
-  gsettings set com.canonical.Unity always-show-menus true
-
-  # Show menu in title bar
-  gsettings set com.canonical.Unity integrated-menus true
 }
 
 function gitConfig() {
@@ -71,7 +43,7 @@ function gitConfig() {
   echo -e "\033[1;33mDigite um email para a config user.email \033[0m";
   read -r MAIL
 
-  git config --global user.name $NAME
+  git config --global user.name "$NAME"
   git config --global user.email $MAIL
 
   git config --global alias.s 'status -s'
@@ -80,6 +52,8 @@ function gitConfig() {
   git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
   git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate'
   git config --global alias.lg 'log --graph --oneline --decorate --all'
+
+  git config --global core.editor "vim"
 }
 
 function terminatorConfig() {
@@ -102,7 +76,10 @@ function terminatorConfig() {
 [plugins]
 [profiles]
   [[default]]
-    background_color = "#300a24"
+    # background_color = "#300a24"
+    background_type = 'transparent'
+    background_color = "#2d2c2d"
+    background_darkness = 0.9
     background_image = None
     font = Ubuntu Mono 13
     foreground_color = "#ffffff"
@@ -114,26 +91,6 @@ function terminatorConfig() {
 ' > ~/.config/terminator/config
 }
 
-function nemoDefault() {
-  echo -e "\033[0;36mConfigurando Nemo ... \033[0m"
-  # Set Nemo default file manager
-  xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
-
-  # Set Nemo default desktop handler
-  gsettings set org.gnome.desktop.background show-desktop-icons false
-  gsettings set org.nemo.desktop show-desktop-icons true
-}
-
-function launcherConfig() {
-  echo -e "\033[0;36mConfigurando Launcher ... \033[0m"
-
-  # Launcher position
-  # gsettings set com.canonical.Unity.Launcher launcher-position 'Top'
-
-  # Launcher intems
-  laucherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
-  gsettings set com.canonical.Unity.Launcher favorites $laucherItems
-}
 
 
 ##############################
@@ -146,7 +103,7 @@ function getDbeaver() {
   link="https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb"
   fileName="dbeaver.deb"
 
-  wget https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb -O $fileName
+  wget -q https://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb -O $fileName
   dpkgInstall $fileName
 }
 
@@ -157,30 +114,8 @@ function getSlack() {
   link="https://downloads.slack-edge.com/linux_releases/slack-desktop-${lastVersion}-amd64.deb"
   fileName="slack.deb"
 
-  wget $link -O $fileName
+  wget -q $link -O $fileName
   dpkgInstall $fileName
-}
-
-function getPostman() {
-  echo -e "\033[0;36mObtendo Postman ... \033[0m";
-
-  fileName="postman.tar.gz"
-
-  wget https://dl.pstmn.io/download/latest/linux64 -O $fileName
-  sudo tar -xzf $fileName -C /opt
-  rm $fileName
-  sudo ln -s /opt/Postman/Postman /usr/bin/postman
-
-  cat > ~/.local/share/applications/postman.desktop <<EOL
-[Desktop Entry]
-Encoding=UTF-8
-Name=Postman
-Exec=postman
-Icon=/opt/Postman/resources/app/assets/icon.png
-Terminal=false
-Type=Application
-Categories=Development;
-EOL
 }
 
 function getChrome() {
@@ -188,19 +123,7 @@ function getChrome() {
 
   fileName="chrome.deb"
 
-  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $fileName
-  dpkgInstall $fileName
-}
-
-function getVirtualBox() {
-  echo -e "\033[0;36mObtendo Virtual Box ... \033[0m";
-
-  linuxVersion="$([[ `uname -p` == x86_64 ]] && echo amd64 || echo i386)"
-  linuxName="$(lsb_release -sc)"
-  link="$(curl -s https://www.virtualbox.org/wiki/Linux_Downloads | grep -oE "http:\/\/[^\"\ ]*?${linuxName}_${linuxVersion}\.deb")"
-  fileName="vbox.deb"
-
-  wget $link -O $fileName
+  wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $fileName
   dpkgInstall $fileName
 }
 
@@ -209,7 +132,7 @@ function getTeamviewer() {
 
   fileName="teamviewer.deb"
 
-  wget https://download.teamviewer.com/download/teamviewer_i386.deb -O $fileName
+  wget -q https://download.teamviewer.com/download/teamviewer_i386.deb -O $fileName
   dpkgInstall $fileName
 }
 
@@ -220,8 +143,7 @@ function getWps() {
   link="$(curl -s http://wps-community.org/downloads | grep -oE "http:\/\/kdl1[^\"\ ]*?${linuxVersion}\.deb")"
   fileName="wps-office.deb"
 
-  wget $link -O $fileName
-  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O web-office-fonts.deb
+  wget -q $link -O $fileName
   dpkgInstall $fileName
 }
 
@@ -230,7 +152,7 @@ function getWpsFonts() {
 
   fileName="wps-office-fonts.deb"
 
-  wget http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O $fileName
+  wget -q http://kdl.cc.ksosoft.com/wps-community/download/fonts/wps-office-fonts_1.0_all.deb -O $fileName
   dpkgInstall $fileName
 }
 
@@ -299,12 +221,11 @@ function aptDistUp() {
 function afterScript() {
   echo -e "\n\n"
   echo -e "\e[1;34m          PROCEDIMENTOS FINAIS\e[0m"
+  echo -e "\e[1;32m[*] \e[1;36mSETTINGS\e[0m: execute settings.sh sem SUDO"
   echo -e "\e[1;32m[*] \e[1;36mJAVA\e[0m: configurar variável JAVA_HOME"
-  echo -e "\e[1;32m[*] \e[1;36mBURP SUITE\e[0m: baixar e instalar https://portswigger.net/burp"
   echo -e "\e[1;32m[*] \e[1;36mDEFAULT BROWSER\e[0m: update-alternatives --config gnome-www-browser"
   echo -e "\e[1;32m[*] \e[1;36mDEFAULT TERMINAL\e[0m: update-alternatives --config x-terminal-emulator"
 }
-
 
 
 
@@ -321,9 +242,11 @@ repos=(
   'ppa:webupd8team/atom'
 )
 
-arr=(
+pkgs=(
   'default-jdk'
   'vim'
+  'curl'
+  'crunch'
   'git'
   'htop'
   'nemo'
@@ -340,14 +263,13 @@ arr=(
   'python-dev'
   'python-qt4'
   'python-qt4-dev'
+  'virtualbox'
 )
 
-arrCalls=(
+getCalls=(
   'getDbeaver'
   'getSlack'
-  'getPostman'
   'getChrome'
-  'getVirtualBox'
   'getTeamviewer'
   'getWps'
   'getWpsFonts'
@@ -363,7 +285,7 @@ done
 
 aptUpdate
 
-for i in ${arr[*]}; do
+for i in ${pkgs[*]}; do
   echo -e "\033[1;33mDeseja instalar $i (Y/n)? \033[0m";
   read -rsn1;
   [[ $REPLY =~ [sSyY\ ] ]] || [[ $REPLY == '' ]] && aptInstall $i;
@@ -372,18 +294,14 @@ done
 homeBin
 backgrounds
 bashrcConfig
-keybindingsConfig
-behaviorConfig
-
 gitConfig
 terminatorConfig
-nemoDefault
 
-for i in ${arrCalls[*]}; do
+for i in ${getCalls[*]}; do
   echo -e "\033[1;33m$i (Y/n)? \033[0m";
   read -rsn1;
-  [[ $REPLY =~ [sSyY\ ] ]] || [[ $REPLY == '' ]] && eval $1
+  [[ $REPLY =~ [sSyY\ ] ]] || [[ $REPLY == '' ]] && ${i}
 done
 
-launcherConfig
+aptUpdate
 afterScript
