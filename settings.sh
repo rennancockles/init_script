@@ -48,3 +48,12 @@ gsettings set org.gnome.mutter workspaces-only-on-primary false
 echo -e "\033[0;36mConfigurando Menu ... \033[0m"
 gsettings set org.gnome.desktop.interface clock-show-date true
 gsettings set org.gnome.desktop.interface show-battery-percentage true
+
+echo -e "\033[0;36mConfigurando Nemo ... \033[0m"
+gsettings set org.nemo.preferences show-new-folder-icon-toolbar true
+gsettings set org.nemo.preferences show-home-icon-toolbar true
+gsettings set org.nemo.preferences show-location-entry true
+gsettings set org.nemo.preferences close-device-view-on-device-eject true
+gsettings set org.nemo.preferences show-full-path-titles true
+gsettings set org.nemo.preferences show-open-in-terminal-toolbar true
+

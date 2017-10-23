@@ -7,8 +7,7 @@
 function homeBin() {
   [[ -d $HOME/bin ]] || mkdir $HOME/bin
 
-  chown $(users) $HOME/bin
-  chgrp $(users) $HOME/bin
+  chown $(users):$(users) -R $HOME/bin
 
   HOME_ESCAPE=$(echo $HOME | sed 's,/,\\/,g');
   LN=$(sed -n '/secure_path/=' /etc/sudoers)
