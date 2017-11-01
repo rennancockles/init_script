@@ -28,7 +28,28 @@ function backgrounds() {
 function bashrcConfig() {
   echo -e "\033[0;36mConfigurando Bashrc ... \033[0m"
 
-  echo "export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;33m\]\w \[\e[0;36m\]`git rev-parse --abbrev-ref HEAD 2> /dev/null | sed \"s/.*/\(&\) /\"`\n\[\033[37m\]$\[\033[00m\] '">>~/.bashrc
+  echo "
+export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;33m\]\w \[\e[0;36m\]\`git rev-parse --abbrev-ref HEAD 2> /dev/null | sed \"s/.*/\(&\) /\"\`\n\[\033[37m\]$\[\033[00m\] '
+
+transfer() {
+  if [ \$# -eq 0 ]; then
+    echo -e \"No arguments specified. \nUsage: transfer /tmp/test.md \n       cat /tmp/test.md | transfer test.md\";
+    return 1;
+  fi
+
+  tmpfile=\$( mktemp -t transferXXX );
+
+  if tty -s; then
+    basefile=\$(basename \"\$1\" | sed -e 's/[^a-zA-Z0-9._-]/-/g');
+    curl --progress-bar --upload-file \"\$1\" \"https://transfer.sh/\$basefile\" >> \$tmpfile;
+  else
+    curl --progress-bar --upload-file \"-\" \"https://transfer.sh/\$1\" >> \$tmpfile ;
+  fi;
+
+  cat \$tmpfile;
+  rm -f \$tmpfile;
+}
+" >>~/.bashrc
 
   source ~/.bashrc
 }
