@@ -59,7 +59,7 @@ elif [[ $major == 16 ]]; then
   gsettings set com.canonical.Unity always-show-menus true
 
   # favorites
-  launcherItems="['application://ubiquity.desktop', 'application://firefox.desktop', 'application://google-chrome.desktop', 'unity://running-apps', 'unity://expo-icon']"
+  launcherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://google-chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
   gsettings set com.canonical.Unity.Launcher favorites $launcherItems
   
   echo -e "\033[0;36mConfigurando Time Format ... \033[0m"
