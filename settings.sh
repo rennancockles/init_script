@@ -5,6 +5,8 @@ if [[ `id -u` -eq 0 ]]; then
   exit 1;
 fi
 
+major=$(lsb_release -rs | cut -d'.' -f1)
+
 alias ips='ip addr show | grep inet\ '
 
 echo -e "\033[0;36mConfigurando Keybindings ... \033[0m"
@@ -24,30 +26,47 @@ gsettings set org.gnome.desktop.screensaver picture-options 'scaled'
 gsettings set org.gnome.desktop.screensaver lock-enabled false
 
 echo -e "\033[0;36mConfigurando Touchpad ... \033[0m"
-gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
+gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
 
-echo -e "\033[0;36mConfigurando Dock ... \033[0m"
-gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
-gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-gsettings set org.gnome.shell.extensions.dash-to-dock multi-monitor true
-gsettings set org.gnome.shell.extensions.dash-to-dock custom-background-color true
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-gsettings set org.gnome.shell.extensions.dash-to-dock preferred-monitor 1
-gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 30
-gsettings set org.gnome.shell.extensions.dash-to-dock background-color '#777777'
-gsettings set org.gnome.shell.extensions.dash-to-dock isolate-worspaces true
-# favorites
-launcherItems="['nemo.desktop', 'firefox.desktop', 'atom.desktop']"
-gsettings set org.gnome.shell favorite-apps $laucherItems
+if [[ $major > 16 ]]; then 
+  echo -e "\033[0;36mConfigurando Dock ... \033[0m"
+  gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
+  gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
+  gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+  gsettings set org.gnome.shell.extensions.dash-to-dock multi-monitor true
+  gsettings set org.gnome.shell.extensions.dash-to-dock custom-background-color true
+  gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+  gsettings set org.gnome.shell.extensions.dash-to-dock preferred-monitor 1
+  gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 30
+  gsettings set org.gnome.shell.extensions.dash-to-dock background-color '#777777'
+  gsettings set org.gnome.shell.extensions.dash-to-dock isolate-worspaces true
+  # favorites
+  launcherItems="['nemo.desktop', 'firefox.desktop', 'atom.desktop']"
+  gsettings set org.gnome.shell favorite-apps $launcherItems
 
-echo -e "\033[0;36mConfigurando Workspaces ... \033[0m"
-gsettings set org.gnome.mutter dynamic-workspaces false
-gsettings set org.gnome.mutter workspaces-only-on-primary false
+  echo -e "\033[0;36mConfigurando Workspaces ... \033[0m"
+  gsettings set org.gnome.mutter dynamic-workspaces false
+  gsettings set org.gnome.mutter workspaces-only-on-primary false
 
-echo -e "\033[0;36mConfigurando Menu ... \033[0m"
-gsettings set org.gnome.desktop.interface clock-show-date true
-gsettings set org.gnome.desktop.interface show-battery-percentage true
+  echo -e "\033[0;36mConfigurando Menu ... \033[0m"
+  gsettings set org.gnome.desktop.interface clock-show-date true
+  gsettings set org.gnome.desktop.interface show-battery-percentage true
+elif [[ $major == 16 ]]; then 
+  echo -e "\033[0;36mConfigurando Dock ... \033[0m"
+  profile=$(gsettings get org.compiz current-profile | tr -d "'")
+  gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ vsize 4
+
+  gsettings set com.canonical.Unity always-show-menus true
+
+  # favorites
+  launcherItems="['application://ubiquity.desktop', 'application://firefox.desktop', 'application://google-chrome.desktop', 'unity://running-apps', 'unity://expo-icon']"
+  gsettings set com.canonical.Unity.Launcher favorites $launcherItems
+  
+  echo -e "\033[0;36mConfigurando Time Format ... \033[0m"
+  gsettings set com.canonical.indicator.datetime time-format 'custom'
+  gsettings set com.canonical.indicator.datetime custom-time-format '%d-%m  \|/ %H:%M'
+
+fi
 
 echo -e "\033[0;36mConfigurando Nemo ... \033[0m"
 gsettings set org.nemo.preferences show-new-folder-icon-toolbar true
@@ -56,4 +75,8 @@ gsettings set org.nemo.preferences show-location-entry true
 gsettings set org.nemo.preferences close-device-view-on-device-eject true
 gsettings set org.nemo.preferences show-full-path-titles true
 gsettings set org.nemo.preferences show-open-in-terminal-toolbar true
+
+
+
+
 
