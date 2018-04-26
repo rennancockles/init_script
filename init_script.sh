@@ -274,7 +274,7 @@ pkgs=(
   'minicom'
   'nmap'
   'zenmap'
-  'wireshark'
+  'psensor'
   'pinta'
   'atom'
   'vlc'
