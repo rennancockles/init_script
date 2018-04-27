@@ -52,20 +52,21 @@ if [[ $major > 16 ]]; then
   echo -e "\033[0;36mConfigurando Menu ... \033[0m"
   gsettings set org.gnome.desktop.interface clock-show-date true
   gsettings set org.gnome.desktop.interface show-battery-percentage true
+  
 elif [[ $major == 16 ]]; then 
-  echo -e "\033[0;36mConfigurando Dock ... \033[0m"
+  echo -e "\033[0;36mConfigurando Workspaces ... \033[0m"
   profile=$(gsettings get org.compiz current-profile | tr -d "'")
   gsettings set org.compiz.core:/org/compiz/profiles/${profile}/plugins/core/ vsize 4
 
+  echo -e "\033[0;36mConfigurando Barra Superior ... \033[0m"
   gsettings set com.canonical.Unity always-show-menus true
-
-  # favorites
-  launcherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://google-chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
-  gsettings set com.canonical.Unity.Launcher favorites $launcherItems
-  
-  echo -e "\033[0;36mConfigurando Time Format ... \033[0m"
+  gsettings set com.canonical.indicator.power show-percentage true
   gsettings set com.canonical.indicator.datetime time-format 'custom'
   gsettings set com.canonical.indicator.datetime custom-time-format '%d-%m  \|/ %H:%M'
+
+  echo -e "\033[0;36mConfigurando Launcher ... \033[0m"
+  launcherItems="['application://nemo.desktop', 'application://firefox.desktop', 'application://google-chrome.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
+  gsettings set com.canonical.Unity.Launcher favorites $launcherItems
 
 fi
 
