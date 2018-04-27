@@ -8,6 +8,7 @@ fi
 major=$(lsb_release -rs | cut -d'.' -f1)
 
 alias ips='ip addr show | grep inet\ '
+alias webcam='vlc v4l2:///dev/video0:chroma=mjpg:width=800:height=600 '
 
 echo -e "\033[0;36mConfigurando Keybindings ... \033[0m"
 keybindings="['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
