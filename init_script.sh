@@ -23,6 +23,10 @@ function backgrounds() {
   wget -q http://wallpaperswide.com/download/galactic_dinner-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Dinner.jpg
   wget -q http://wallpaperswide.com/download/blame_the_bunny-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Bunny.jpg
   wget -q http://wallpaperswide.com/download/bike_chase-wallpaper-1920x1080.jpg -O /usr/share/backgrounds/Chase.jpg
+  wget -q https://wallpaperscraft.com/image/skull_art_bright_3d_102467_1920x1080.jpg -O /usr/share/backgrounds/Skulls.jpg
+  wget -q https://images6.alphacoders.com/572/thumb-1920-572511.jpg -O /usr/share/backgrounds/Homer_ubuntu.jpg
+  
+  
 }
 
 function bashrcConfig() {
