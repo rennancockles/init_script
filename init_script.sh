@@ -29,6 +29,10 @@ function bashrcConfig() {
   echo -e "\033[0;36mConfigurando Bashrc ... \033[0m"
 
   echo "
+# my alias
+alias ips='ip addr show | grep inet\ '
+alias testcam='vlc v4l2:///dev/video0:chroma=mjpg:width=800:height=600 '  
+
 export PS1='\[\e[1;32m\]\u\[\e[0;32m\]@\h: \[\e[0;33m\]\w \[\e[0;36m\]\`git rev-parse --abbrev-ref HEAD 2> /dev/null | sed \"s/.*/\(&\) /\"\`\n\[\033[37m\]$\[\033[00m\] '
 
 transfer() {
