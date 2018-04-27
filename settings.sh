@@ -17,6 +17,10 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings $k
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'nemo'
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'nemo'
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '<Super>e'
+# show desktop
+gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ show-desktop-key '<Super>m'
+# show launcher 'start menu'
+gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ show-launcher '<Super>'
 
 echo -e "\033[0;36mConfigurando Desktop ... \033[0m"
 gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/Dinner.jpg'
