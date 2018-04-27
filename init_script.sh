@@ -306,6 +306,7 @@ pkgs=(
   'browser-plugin-vlc'
   'audacity'
   'kazam'
+  'python-pip'
   'python-dev'
   'python-qt4'
   'python-qt4-dev'
