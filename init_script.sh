@@ -51,8 +51,26 @@ transfer() {
 }
 " >>~/.bashrc
 
+
+  echo "echo -e '\e[1;34m 
+   _______  _______  _______  _        _        _______  _______   
+  (  ____ \(  ___  )(  ____ \| \    /\( \      (  ____ \(  ____ \  
+  | (    \/| (   ) || (    \/|  \  / /| (      | (    \/| (    \/  
+  | |      | |   | || |      |  (_/ / | |      | (__    | (_____   
+  | |      | |   | || |      |   _ (  | |      |  __)   (_____  )  
+  | |      | |   | || |      |  ( \ \ | |      | (            ) |  
+  | (____/\| (___) || (____/\|  /  \ \| (____/\| (____/\/\____) |  
+  (_______/(_______)(_______/|_/    \/(_______/(_______/\_______)  
+'" >>~/.bashrc                             
+
   source ~/.bashrc
 }
+
+function vimrcConfig() {
+  echo 'set tabstop=4
+set expandtab' >>~/.vimrc2
+}
+
 
 function gitConfig() {
   echo -e "\033[0;36mConfigurando Git ... \033[0m"
@@ -263,11 +281,13 @@ repos=(
 )
 
 pkgs=(
+  'dconf-editor'
   'default-jdk'
   'vim'
   'curl'
   'crunch'
   'git'
+  'whois'
   'htop'
   'nemo'
   'terminator'
@@ -276,6 +296,7 @@ pkgs=(
   'zenmap'
   'psensor'
   'pinta'
+  'jhead'
   'atom'
   'vlc'
   'browser-plugin-vlc'
@@ -283,7 +304,9 @@ pkgs=(
   'python-dev'
   'python-qt4'
   'python-qt4-dev'
+  'python-mysqldb'
   'virtualbox'
+  'wine'
 )
 
 getCalls=(
@@ -314,6 +337,7 @@ done
 homeBin
 backgrounds
 bashrcConfig
+vimrcConfig
 gitConfig
 terminatorConfig
 
