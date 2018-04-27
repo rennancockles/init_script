@@ -117,7 +117,7 @@ function terminatorConfig() {
       type = Terminal
     [[[window0]]]
       parent = ""
-      size = 765, 550
+      size = 1300, 650
       type = Window
 [plugins]
 [profiles]
