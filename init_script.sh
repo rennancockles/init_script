@@ -94,9 +94,8 @@ function gitConfig() {
 
   git config --global alias.s 'status -s'
   git config --global alias.co 'checkout'
-  git config --global alias.ld 'log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative'
-  git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
-  git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate'
+  git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s %Cgreen[%cn, %cd]" --decorate --date=format:"%d/%m/%Y %H:%M:%S %z" --numstat'
+  git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s %Cgreen[%cn, %cd]" --decorate --date=format:"%d/%m/%Y %H:%M:%S %z"'
   git config --global alias.lg 'log --graph --oneline --decorate --all'
 
   git config --global core.editor "vim"
